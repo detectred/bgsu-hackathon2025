@@ -7,12 +7,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class AIClient {
-    private static final String API_KEY = "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";
+private static final String API_KEY = "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";
 
     public String askQuestion(String question) throws IOException {
         // Build JSON request
         JSONObject json = new JSONObject()
-                .put("model", "llama-3.1-70b-versatile")
+                .put("model", "llama-3.3-70b-versatile")
                 .put("messages", new JSONArray()
                         .put(new JSONObject()
                                 .put("role", "user")
@@ -32,16 +32,31 @@ public class AIClient {
         os.flush();
         os.close();
 
-        // Read response
-        BufferedReader br = new BufferedReader(
-                new InputStreamReader(connection.getInputStream())
-        );
+        // Check response code
+        int responseCode = connection.getResponseCode();
+
+        // Read response (or error)
+        BufferedReader br;
+        if (responseCode == 200) {
+            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        } else {
+            // Read error message
+            br = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+            System.err.println("Error Code: " + responseCode);
+        }
+
         String line;
         StringBuilder response = new StringBuilder();
         while ((line = br.readLine()) != null) {
             response.append(line);
         }
         br.close();
+
+        // If there was an error, print it and throw exception
+        if (responseCode != 200) {
+            System.err.println("Error Response: " + response.toString());
+            throw new IOException("API Error: " + response.toString());
+        }
 
         // Parse response
         JSONObject responseJson = new JSONObject(response.toString());

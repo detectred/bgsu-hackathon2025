@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.*;
 
+//    private static final String API_KEY = "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";
 enum Major {
     CS, SE
 }
@@ -117,7 +118,7 @@ public class Main {
         return copied;
     }
 
-    public static Map<String, List<String>> BGPRequest() throws IOException {
+    public static String BGPRequest() throws IOException {
         String apiParams = "{\"url\": \"https://catalog.bgsu.edu/preview_program.php?catoid=21&poid=8058&hl=%22BG+perspective%22&returnto=search#bg-perspective-course-listing\", \"formats\": [\"markdown\"]}";
         String apiURL = "https://api.firecrawl.dev/v2/scrape";
         String apiKEY = "fc-9fcb6f29a01348119dbc2d22c0467b7c";
@@ -163,7 +164,7 @@ public class Main {
         resultString = resultString.replace("](https://catalog.bgsu.edu/preview_program.php?catoid=21&poid=8058&hl=%22BG+perspective%22&returnto=search#tt2360))","");
         resultString = resultString.replace("<br>-","");
         resultString = resultString.replace("#", "");
-        String[] starr = resultString.split("\\[");
+        /*String[] starr = resultString.split("\\[");
         for (int i = 0; i < starr.length; i++) {
             System.out.println(starr[i]);
         }
@@ -200,10 +201,10 @@ public class Main {
             System.out.println(entry.getKey() + ": " + entry.getValue());
 
         }
+*/
 
 
-
-        return stmap;
+        return resultString;
     }
 
 
@@ -246,7 +247,7 @@ public class Main {
 
 
         String requestResult = null;
-        Map<String,List<String>> bgpString;
+        String bgpString;
         if(majorURL!=null){
             try {
                 requestResult = DegreeRequest(majorURL);
@@ -259,6 +260,14 @@ public class Main {
                 throw new RuntimeException(e);
             }
 
+            try {
+                System.out.println("\n\n\n");
+                AIClient ai = new AIClient();  // Create an instance first
+                String aiResponse = ai.askQuestion("Can you choose some Courses from the BGP list to fill out some of the Major Requirements? " + "These are the Major Requirements:\n" + requestResult + "These are the BGPs:\n" + bgpString);
+                System.out.println(aiResponse);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
