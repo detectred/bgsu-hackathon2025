@@ -1,5 +1,11 @@
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.*;
@@ -67,6 +73,48 @@ public class Main {
         return userBachType;
     }
 
+    public static void Request() throws IOException {
+        String apiParams = "{\"url\": \"https://catalog.bgsu.edu/preview_program.php?catoid=23&poid=8642\", \"formats\": [\"markdown\"]}";
+        String apiURL = "https://api.firecrawl.dev/v2/scrape";
+        String apiKEY = "fc-9fcb6f29a01348119dbc2d22c0467b7c";
+   /* HttpClient client = HttpClient.newHttpClient();
+    HttpRequest request = HttpRequest.newBuilder(URI.create(apiURL))
+            .POST(HttpRequest.BodyPublisher.ofString())
+            .header("Authorization: ", apiKEY)
+            .build();
+*/
+        URL obj = new URL(apiURL);
+        HttpURLConnection pconnection = (HttpURLConnection)obj.openConnection();
+        pconnection.setRequestMethod("POST");
+        pconnection.setRequestProperty("Authorization", "Bearer " +apiKEY);
+        pconnection.setRequestProperty("Content-Type", "application/json");
+
+
+        pconnection.setDoOutput(true);
+        OutputStream os = pconnection.getOutputStream();
+        os.write(apiParams.getBytes());
+        os.flush();
+        os.close();
+        int responseCode = pconnection.getResponseCode();
+        System.out.println("Post Response Code: " + responseCode);
+        System.out.println("Post Response Message: " + pconnection.getResponseMessage());
+        BufferedReader br = new BufferedReader(new InputStreamReader(pconnection.getInputStream()));
+        String line;
+        StringBuilder response = new StringBuilder();
+        while((line = br.readLine())!=null){
+            response.append(line);
+        }
+        br.close();
+        //System.out.println(response.toString());
+        int stStart = response.indexOf("BG Perspective (BGP) Requirements<br>");
+        int stEnd = response.indexOf("Electives and Non-Credit Courses");
+        String copied = response.substring(stStart, stEnd);
+        copied = copied.replace("<br>", "\n");
+        copied = copied.replace("\\\\","");
+        copied = copied.replace("###", "");
+        copied = copied.replace("* * *", "");
+        System.out.println(copied);
+    }
 
 
     public static void main(String[] args) {
@@ -106,4 +154,6 @@ public class Main {
         
         System.out.println("\nMajor Website: " + majorURL);
     }
+
+
 }
