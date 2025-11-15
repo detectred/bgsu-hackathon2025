@@ -118,6 +118,7 @@ public class Main {
 
 
     public static void main(String[] args) {
+        String linkBGP = "https://catalog.bgsu.edu/preview_program.php?catoid=23&poid=8681#bgsu-core-learning-objectives";
         Scanner userInput = new Scanner(System.in);
         Intro();
         Major userMajor = MajorValidation(userInput);
