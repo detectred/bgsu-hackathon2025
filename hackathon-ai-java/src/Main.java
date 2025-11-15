@@ -48,11 +48,7 @@ public class Main {
         do {
             System.out.print("\nWhat is your Degree? Arts (A) or Science (S) Enter 1 Letter: ");
             tempBachType = userInput.next();
-
-            //System.out.println("Doing toUpperCase");
             tempBachType = tempBachType.toUpperCase();
-
-            //System.out.println("Entering Try/Catch");
             try {
                 userBachType = BachType.valueOf(tempBachType);
             } catch (IllegalArgumentException e1) {
@@ -63,8 +59,6 @@ public class Main {
                 System.out.println("Illegal Argument NSEE");
                 continue;
             }
-            //System.out.println("Temp check: ");
-            //System.out.print(tempBachType);
 
             if (!userBachType.equals(null)){
                 validated = true;
@@ -81,7 +75,6 @@ public class Main {
         Major userMajor = MajorValidation(userInput);
         String majorURL = null;
         String minorURL;
-        //BachType userBachType = BachType.S;
         BachType userBachType = BachTypeValidation(userInput);
         userInput.close();
 
