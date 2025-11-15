@@ -118,7 +118,6 @@ public class Main {
 
 
     public static void main(String[] args) {
-        String linkBGP = "https://catalog.bgsu.edu/preview_program.php?catoid=23&poid=8681#bgsu-core-learning-objectives";
         Scanner userInput = new Scanner(System.in);
         Intro();
         Major userMajor = MajorValidation(userInput);
@@ -126,6 +125,8 @@ public class Main {
         String minorURL;
         BachType userBachType = BachTypeValidation(userInput);
         userInput.close();
+
+
 
 
         System.out.print("\nMajor Selected: ");
@@ -154,7 +155,9 @@ public class Main {
         }
         
         System.out.println("\nMajor Website: " + majorURL);
-    }
 
+
+
+    }
 
 }
